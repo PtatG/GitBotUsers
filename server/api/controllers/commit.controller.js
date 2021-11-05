@@ -10,12 +10,12 @@ const Commit = require("../models/commit.model.js");
 const jwt = require("../jwt/jwtFunction.js");
 const fs = require("fs");
 const config = require("config");
-const secret = config.get("GH_SECRET");
+const secret = process.env.GH_SECRET;
 const {Octokit} = require("@octokit/rest");
 const octokit = new Octokit({auth: secret, userAgent: "GitBotUser"});
 const bcrypt = require("bcryptjs");
 const Crypto = require("simple-crypto-js").default;
-let secretKey  = fs.readFileSync('./config/secret.key', 'utf8');
+let secretKey  = process.env.SECRET_KEY;
 let crypto = new Crypto(secretKey);
 
 

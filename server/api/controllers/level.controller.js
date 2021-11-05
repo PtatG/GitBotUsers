@@ -11,7 +11,7 @@ const jwt = require("../jwt/jwtFunction.js");
 const fs = require("fs");
 const bcrypt = require("bcryptjs");
 const Crypto = require("simple-crypto-js").default;
-let secretKey  = fs.readFileSync('./config/secret.key', 'utf8');
+let secretKey  = process.env.SECRET_KEY;
 let crypto = new Crypto(secretKey);
 
 // gets all users associated with a repo_full_name

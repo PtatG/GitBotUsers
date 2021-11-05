@@ -11,8 +11,8 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const config = require("config");
-const db = config.get("MONGODB_URI");
-const corsOptions = config.get("ORIGIN");
+const db = process.env.MONGODB_URI;
+const corsOptions = process.env.ORIGIN;
 const app = express();
 const port = process.env.PORT || 3000;
 
