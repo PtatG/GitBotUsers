@@ -11,6 +11,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const config = require("config");
+const path = require("path");
 const db = process.env.MONGODB_URI;
 const corsOptions = process.env.ORIGIN;
 const app = express();
@@ -18,6 +19,7 @@ const port = process.env.PORT || 3000;
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json({limit: "50mb"}));
+app.use(express.static(path.join(__dirname, '../client/build')));
 
 mongoose.connect(db, {
   useNewUrlParser: true,
@@ -37,6 +39,10 @@ app.get("/", (req, res) => {
 
 // if name api back to app, must change this line
 require("./api/routes/routes.js")(app);
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/../client/build/index.html'))
+})
 
 app.listen(port, () => {
   console.log("Server is running on port %d", port);

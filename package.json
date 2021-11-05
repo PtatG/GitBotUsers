@@ -1,0 +1,41 @@
+{
+  "name": "gitbotusers",
+  "version": "1.0.0",
+  "description": "Website for GitBot Users built with MERN stack.",
+  "main": "index.js",
+  "scripts": {
+    "frontend": "cd client && npm start",
+    "api": "cd server && nodemon index.js",
+    "dev": "concurrently --kill-others-on-fail \"npm run api\" \"npm run frontend\"",
+    "heroku-postbuild": "cd client && npm install && npm run build"
+  },
+  "keywords": [
+    "MERN",
+    "mongodb",
+    "express",
+    "react",
+    "nodejs",
+    "mongoose",
+    "rest",
+    "api",
+    "jwt",
+    "bcryptjs"
+  ],
+  "author": "Phillip Tat",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/rest": "^18.12.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "config": "^3.3.6",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.11",
+    "mongoose-unique-validator": "^3.0.0",
+    "simple-crypto-js": "^3.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  }
+}
