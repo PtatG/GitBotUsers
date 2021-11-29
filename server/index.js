@@ -19,7 +19,7 @@ const port = process.env.PORT || 3000;
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json({limit: "50mb"}));
-app.use(express.static(path.join(__dirname, '../client/gitbotusers')));
+app.use(express.static(path.join(__dirname, '../client/build')));
 
 mongoose.connect(db, {
   useNewUrlParser: true,
@@ -41,7 +41,7 @@ app.get("/", (req, res) => {
 require("./api/routes/routes.js")(app);
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/../client/gitbotusers/index.html'))
+  res.sendFile(path.join(__dirname + '/../client/build/index.html'))
 })
 
 app.listen(port, () => {
