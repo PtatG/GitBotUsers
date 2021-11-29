@@ -15,7 +15,7 @@ const path = require("path");
 const db = process.env.MONGODB_URI;
 const corsOptions = process.env.ORIGIN;
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json({limit: "50mb"}));
