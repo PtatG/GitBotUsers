@@ -64,7 +64,9 @@ export default {
         let created_at = response.data.created_at;
 
         localStorage.setItem("jwt", token);
-        localStorage.setItem("repo_full_name", repo_full_name);
+        // repo_full_name is an array but localStorage can't store arrays
+        // so we turn it into a JSON string to store it
+        localStorage.setItem("repo_full_name", JSON.stringify(repo_full_name));
         localStorage.setItem("username", username);
         localStorage.setItem("created_at", created_at);
 
@@ -72,8 +74,11 @@ export default {
           this.$router.push("/home");
         }
       } catch (err) {
-        swal("Error", err.response.data.error, "error");
-        console.log(err.response);
+        if (err.response) {
+          swal("Error", err.response.data.error, "error");
+        } else {
+          swal("Error", "Unexpected error.", "error");
+        }
       }
     }
   }

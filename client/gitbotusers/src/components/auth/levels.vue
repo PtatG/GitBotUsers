@@ -10,8 +10,8 @@
         <button
           class="navbar-toggler"
           type="button"
-          data-toggle="collapse"
-          data-target="#navbarNav"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
           aria-controls="navbarNav"
           aria-expanded="false"
           aria-label="Toggle navigation"
@@ -19,19 +19,24 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <ul class="navbar-nav">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">User Levels</a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="/commits">Commit Messages</a>
-            </li>
-          </ul>
+          <li class="nav-item active">
+            <a class="nav-link" href="#">User Levels</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/commits">Commit Messages</a>
+          </li>
+        </ul>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul class="navbar-nav">
-            <li class="nav-item active">
-              <a class="nav-link btn btn-secondary" @click="logUserOut" role="button">
-                Sign out
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{username}}
               </a>
+              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarMenuLink">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="#">Edit Repos</a></li>
+                <li><a class="dropdown-item" @click="logUserOut">Sign out</a></li>
+              </ul>
             </li>
           </ul>
         </div>
@@ -40,7 +45,12 @@
     <header>
         <!-- Header -->
         <div class="container mt-5 d-flex justify-content-center">
-            <h2>Viewing Users from {{users[0].repo_full_name}}</h2>
+            <h2 v-if="users">Viewing Users from {{users[0].repo_full_name}}</h2>
+            <div v-else class="d-flex justify-content-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
         </div>
     </header>
     <section>
@@ -73,27 +83,46 @@ import swal from 'sweetalert';
 export default {
   data() {
     return {
-      users: {}
+      users: {},
+      username: {}
     };
   },
   methods: {
     async getUserLevels() {
       try {
-        let levels = {
-            token: localStorage.getItem("jwt"),
-            repo_full_name: localStorage.getItem("repo_full_name")
-        };
+        this.username = localStorage.getItem("username");
+        this.users = JSON.parse(localStorage.getItem("level_data"));
 
-        let response = await this.$http.post("/getRepoUsers", levels);
+        if (!this.users) {
+          let temp_repo = JSON.parse(localStorage.getItem("repo_full_name"));
+          let levels = {
+              token: localStorage.getItem("jwt"),
+              repo_full_name: temp_repo[0]
+          };
 
-        console.log(response);
+          let response = await this.$http.post("/getRepoUsers", levels);
 
-        let token = response.data.token;
-        localStorage.setItem("jwt", token);
+          console.log(response);
 
-        this.users = response.data.repo_users;
+          let token = response.data.token;
+          localStorage.setItem("jwt", token);
+
+          this.users = response.data.repo_users;
+
+          // put this user at front of array
+          let position = this.users.findIndex(user => user.username === this.username);
+          if (position > 0) {
+            let item = this.users.splice(position, 1);
+            this.users.unshift(item[0]);
+          }
+          localStorage.setItem("level_data", JSON.stringify(this.users));
+        }
       } catch (err) {
-        swal("Error", err.response.data.error, "error");
+        if (err.response) {
+          swal("Error", err.response.data.error, "error");
+        } else {
+          swal("Error", "Unexpected error.", "error");
+        }
       }
     },
     logUserOut() {

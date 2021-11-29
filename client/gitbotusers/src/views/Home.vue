@@ -10,8 +10,8 @@
         <button
           class="navbar-toggler"
           type="button"
-          data-toggle="collapse"
-          data-target="#navbarNav"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
           aria-controls="navbarNav"
           aria-expanded="false"
           aria-label="Toggle navigation"
@@ -19,19 +19,24 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <ul class="navbar-nav">
-            <li class="nav-item active">
-              <a class="nav-link" href="/levels">User Levels</a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="/commits">Commit Messages</a>
-            </li>
-          </ul>
+          <li class="nav-item active">
+            <a class="nav-link" href="/levels">User Levels</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/commits">Commit Messages</a>
+          </li>
+        </ul>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul class="navbar-nav">
-            <li class="nav-item active">
-              <a class="nav-link btn btn-secondary" @click="logUserOut" role="button">
-                Sign out
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{user.username}}
               </a>
+              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarMenuLink">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="#">Edit Repos</a></li>
+                <li><a class="dropdown-item" @click="logUserOut">Sign out</a></li>
+              </ul>
             </li>
           </ul>
         </div>
@@ -49,7 +54,7 @@
           <div class="col-md-12">
             <ul class="list-group">
               <li class="list-group-item"><b>Username</b> : {{ user.username }}</li>
-              <li class="list-group-item"><b>Repo Full Name</b> : {{ user.repo_full_name }}</li>
+              <li class="list-group-item"><b>Repo Full Name</b> : {{ user.repo_full_name[0] }}</li>
               <li class="list-group-item"><b>Account Created</b> : {{ user.created_at }}</li>
             </ul>
           </div>
@@ -71,7 +76,7 @@ export default {
     getUserDetails() {
       let date = new Date(localStorage.getItem("created_at"));
       this.user = {
-        repo_full_name: localStorage.getItem("repo_full_name"),
+        repo_full_name: JSON.parse(localStorage.getItem("repo_full_name")),
         username: localStorage.getItem("username"),
         created_at: (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear()
       };
